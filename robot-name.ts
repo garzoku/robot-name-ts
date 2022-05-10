@@ -1,14 +1,15 @@
 export class Robot {
   readonly alphabet = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
   readonly numbers = `0123456789`;
-  public name: string;
+  name: string;
+  static usedNames: string[];
 
   static releaseNames() {
     return this.name;
   }
 
   resetName() {
-    this.name = "";
+    this.name = this.deliverName();
   }
 
   buildName() {
@@ -22,7 +23,35 @@ export class Robot {
     return randomName;
   }
 
+  checkName(randomName: string) {
+    let nameIsNew = true;
+    if (Robot.usedNames !== undefined) {
+      Robot.usedNames.forEach((usedName) => {
+        if (randomName === usedName) {
+          nameIsNew = false;
+          return;
+        }
+      });
+    }
+    if (!nameIsNew) console.log(nameIsNew);
+    return nameIsNew;
+  }
+
+  deliverName() {
+    let newName = this.buildName();
+    while (!this.checkName(newName)) {
+      newName = this.buildName();
+    }
+    return newName;
+  }
+
+  saveName(name: string) {
+    Robot.usedNames.push(name);
+  }
+
   constructor() {
-    this.name = this.buildName();
+    this.name = this.deliverName();
+    Robot.usedNames = [];
+    this.saveName(this.name);
   }
 }
